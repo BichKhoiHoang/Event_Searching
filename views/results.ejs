@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Search Results</title>
+  </head>
+  <body>
+    <% if (typeof events !== 'undefined') { %> <% if (events.length > 0) { %>
+    <h2>Event Search Results</h2>
+    <ul>
+      <% events.forEach(event => { %>
+      <li>
+        <strong><%= event.name %></strong><br />
+        Location: <%= event._embedded ? event._embedded.venues[0].country.name :
+        'N/A' %>, <%= event._embedded ? event._embedded.venues[0].city.name :
+        'N/A' %><br />
+        Date: <%= event.dates ? event.dates.start.localDate : 'N/A' %><br />
+        <% if (event.images && event.images.length > 0) { %>
+        <img src="<%= event.images[0].url %>" alt="Event Image" width="150" />
+        <% } else { %> No image available <% } %>
+        <button
+          class="check-weather"
+          data-date="<%= event.dates.start.localDate %>"
+          data-city="<%= event._embedded.venues[0].city.name %>"
+        >
+          Check Weather
+        </button>
+        <% if (event._embedded && event._embedded.attractions &&
+        event._embedded.attractions.length > 0) { %>
+        <button
+          class="show-attractions"
+          data-event-id="<%= event._embedded.attractions[0].name %>"
+        >
+          Show Attractions
+        </button>
+        <div class="weather-popup" style="display: none"></div>
+        <div class="attraction-popup" style="display: none"></div>
+        <% } %>
+      </li>
+
+      <% }); %>
+    </ul>
+    <% } else { %>
+    <p>No events found.</p>
+    <% } %> <% } %>
+    <script src="script.js"></script>
+  </body>
+</html>
